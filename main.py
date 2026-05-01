@@ -17,4 +17,13 @@ def start(message):
 • المطور ↤ @ao1x1
 """, reply_markup=markup)
 
+@bot.message_handler(commands=['help'])
+def help(message):
+    bot.reply_to(message, """
+📋 قائمة الأوامر:
+
+/start - بدء البوت 🤖
+/help - قائمة الأوامر 📋
+""")
+
 bot.infinity_polling()
