@@ -9,9 +9,7 @@ def start(message):
     btn1 = types.InlineKeyboardButton("➕ أضفني للمجموعة", url="https://t.me/axeror_bot?startgroup=true")
     btn2 = types.InlineKeyboardButton("👨‍💻 المطور", url="https://t.me/ao1x1")
     markup.add(btn1, btn2)
-    bot.send_photo(message.chat.id,
-        photo="https://i.ibb.co/BV3CzX35",
-        caption="""
+    bot.send_message(message.chat.id, """
 • أهلاً بك عزيزي 👋
 • أنا بوت اسمي يوهان 𒀭
 • اختصاصي حماية المجموعات 🛡
