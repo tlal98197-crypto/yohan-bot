@@ -1,5 +1,7 @@
 import telebot
 from telebot import types
+import yt_dlp
+import os
 
 bot = telebot.TeleBot("8701261854:AAGk_EGJTpKctYPaluNSO6QxE76TLogadR8")
 
@@ -26,21 +28,29 @@ def help(message):
 
 /start - بدء البوت 🤖
 /help - قائمة الأوامر 📋
+/يوت - تحميل أغنية 🎵
 """)
 
-bot.infinity_polling()
-from youtubesearchpython import VideosSearch
-
-@bot.message_handler(commands=['موسيقى'])
+@bot.message_handler(commands=['يوت'])
 def music(message):
-    query = message.text.replace('/موسيقى', '').strip()
+    query = message.text.replace('/يوت', '').strip()
     if not query:
-        bot.reply_to(message, "اكتب اسم الأغنية بعد الأمر!\nمثال: /موسيقى عمر خيرة")
+        bot.reply_to(message, "اكتب اسم الأغنية!\nمثال: /يوت لحن قمر")
         return
-    search = VideosSearch(query, limit=1)
-    result = search.result()['result']
-    if result:
-        video = result[0]
-        bot.reply_to(message, f"🎵 {video['title']}\n{video['link']}")
-    else:
-        bot.reply_to(message, "ما لقيت نتائج! جرب اسم ثاني 🎵")
+    msg = bot.reply_to(message, "• جاري التحميل ...")
+    try:
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'outtmpl': 'song.%(ext)s',
+            'quiet': True,
+        }
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(f"ytsearch:{query}", download=True)
+            filename = ydl.prepare_filename(info['entries'][0])
+        with open(filename, 'rb') as audio:
+            bot.send_audio(message.chat.id, audio)
+        os.remove(filename)
+    except:
+        bot.reply_to(message, "حدث خطأ! جرب مرة ثانية 🎵")
+
+bot.infinity_polling()
