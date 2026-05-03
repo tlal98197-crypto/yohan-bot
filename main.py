@@ -29,3 +29,18 @@ def help(message):
 """)
 
 bot.infinity_polling()
+from youtubesearchpython import VideosSearch
+
+@bot.message_handler(commands=['موسيقى'])
+def music(message):
+    query = message.text.replace('/موسيقى', '').strip()
+    if not query:
+        bot.reply_to(message, "اكتب اسم الأغنية بعد الأمر!\nمثال: /موسيقى عمر خيرة")
+        return
+    search = VideosSearch(query, limit=1)
+    result = search.result()['result']
+    if result:
+        video = result[0]
+        bot.reply_to(message, f"🎵 {video['title']}\n{video['link']}")
+    else:
+        bot.reply_to(message, "ما لقيت نتائج! جرب اسم ثاني 🎵")
